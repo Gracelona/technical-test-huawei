@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form API Sederhana</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; }
+        input { padding: 0.5rem; width: 100%; box-sizing: border-box; }
+        button { padding: 0.5rem 1rem; cursor: pointer; background-color: #f9061f; color: white; border: none; }
+        button:hover { background-color: #f9061f; }
+        #output { margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem; }
+        pre { background: #faf9f9; padding: 1rem; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>Input Data</h1>
+
+    <!-- Form untuk mengirim data -->
+    <form id="dataForm">
+        <div class="form-group">
+            <label for="nama">Nama:</label>
+            <input type="text" id="nama" name="nama" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <button type="submit">Kirim Data</button>
+    </form>
+
+    <hr>
+
+    <!-- Tombol untuk melihat data yang tersimpan -->
+    <button onclick="ambilData()">Lihat Semua Data</button>
+
+    <div id="output">
+        <h3>Hasil Data:</h3>
+        <pre id="result">Belum ada data.</pre>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api/form';
+
+        // Fungsi untuk mengirim data (POST)
+        document.getElementById('dataForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Mencegah reload halaman
+
+            const nama = document.getElementById('nama').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nama, email })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                document.getElementById('dataForm').reset(); // Kosongkan form
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Gagal mengirim data');
+            }
+        });
+
+        // Fungsi untuk mengambil data (GET)
+        async function ambilData() {
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                
+                // Tampilkan data dalam format JSON yang rapi
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Gagal mengambil data';
+            }
+        }
+    </script>
+</body>
+</html>
