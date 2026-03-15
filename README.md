@@ -113,3 +113,52 @@ http://localhost:3000/api/form
 Ambil Data
 GET
 http://localhost:3000/api/form
+
+
+3. Data Processing (SQL Query)
+1. Menambahkan Employee Baru
+INSERT INTO employee
+(name, position, join_date, experience, salary)
+VALUES
+('Albert','Engineer','2024-01-24',2.5,50);
+
+2. Update Salary Engineer
+UPDATE employee
+SET salary = 85
+WHERE position = 'Engineer';
+
+3. Total Salary Tahun 2021
+SELECT SUM(salary) AS total_salary
+FROM employee
+WHERE YEAR(join_date) <= 2021
+AND (release_date IS NULL OR YEAR(release_date) >= 2021);
+
+4. Menampilkan 3 Employee Experience Tertinggi
+SELECT *
+FROM employee
+ORDER BY experience DESC
+LIMIT 3;
+
+5. Subquery Engineer Experience ≤ 3
+SELECT *
+FROM employee
+WHERE name IN
+(
+SELECT name
+FROM employee
+WHERE position='Engineer'
+AND experience <=3
+
+);
+
+Kesimpulan
+
+Pada pengujian ini dilakukan tiga implementasi utama yaitu:
+
+1. Pengembangan backend menggunakan Node.js dan Express untuk menerima dan menyimpan data form.
+
+2. Automasi pengambilan data menggunakan cron job yang berjalan tiga kali sehari dan melakukan pembersihan file secara otomatis.
+
+3. Pengolahan data menggunakan SQL query untuk melakukan operasi insert, update, agregasi, sorting, dan subquery.
+
+Dengan demikian sistem mampu melakukan backend processing, automation scheduling, dan database manipulation secara efektif.
